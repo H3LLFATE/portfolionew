@@ -122,7 +122,7 @@ export default function ContactForm({ selectedPackage, onClearPackage }: Contact
             Ready to Elevate Your <span className="italic font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-305 to-cyan-400 uppercase font-mono pr-2">Restaurant Online?</span>
           </h2>
           <p className="text-neutral-300 text-sm md:text-base font-light max-w-xl mt-4 leading-relaxed font-sans font-light">
-            Ready to offer culinary diners a premium digital layout? Drop a message and Not Decided will contact you personally within 2 hours.
+            Ready to offer culinary diners a premium digital layout? Drop a message and Nexus BlueOrbit Web will contact you personally within 2 hours.
           </p>
         </ScrollReveal>
 
@@ -343,7 +343,7 @@ export default function ContactForm({ selectedPackage, onClearPackage }: Contact
                       Briefing Transmitted!
                     </h3>
                     <p className="text-neutral-300 text-sm mt-3.5 max-w-sm leading-relaxed font-sans font-light">
-                      Thank you! Not Decided has received your restaurant brief. A confirmation trace is active, and I will message you via phone within 2 hours.
+                      Thank you! Nexus BlueOrbit Web has received your restaurant brief. A confirmation trace is active, and I will message you via phone within 2 hours.
                     </p>
 
                     <button
@@ -368,10 +368,10 @@ export default function ContactForm({ selectedPackage, onClearPackage }: Contact
           {/* Logo brand */}
           <div className="flex flex-col space-y-2 items-center md:items-start">
             <span className="text-xl font-bold tracking-widest uppercase text-white font-mono">
-              Not Decided
+              Nexus BlueOrbit Web
             </span>
             <p className="text-neutral-450 text-[11px] font-sans font-light leading-relaxed max-w-xs text-center md:text-left text-neutral-400">
-              Premium Websites for Restaurants, Cafés & Hospitality Brands. Managed by Not Decided.
+              Premium Websites for Restaurants, Cafés & Hospitality Brands. Managed by Nexus BlueOrbit Web.
             </p>
           </div>
 
@@ -395,7 +395,7 @@ export default function ContactForm({ selectedPackage, onClearPackage }: Contact
               <span className="font-mono text-[9px] uppercase tracking-widest">Back To Top</span>
             </button>
             <p className="text-neutral-400 text-xs font-mono">
-              © 2026 Not Decided. All rights reserved.
+              © 2026 Nexus BlueOrbit Web. All rights reserved.
             </p>
           </div>
         </ScrollReveal>

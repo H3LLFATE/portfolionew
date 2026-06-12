@@ -2,8 +2,9 @@
  * Master Head Config - Links and Assets Directory
  * Customize all external assets, URLs, and image links below.
  */
-
-import imgBhagat from './src/assets/images/bhagat_profile.png';
+import imgBhagat from './src/assets/images/bhagat_profile.png'
+import imgGuru from './src/assets/images/guru_profile.png'
+import imgVarshan from './src/assets/images/varshan_profile.png';
 
 export const PORTFOLIO_IMAGES = {
   imgAltitude42: '/Altitude-42.png',
@@ -20,8 +21,8 @@ export const PORTFOLIO_DEMO_URL = 'https://demo-mu-two-82.vercel.app/';
 
 export const TEAM_IMAGES = {
   imgBhagat: imgBhagat,
-  imgVarshan: imgBhagat, // Reused temporary photo as requested
-  imgGuru: imgBhagat,    // Reused temporary photo as requested
+  imgVarshan: imgVarshan, 
+  imgGuru: imgGuru,    
 };
 
 export const CONTACT_LINKS = {

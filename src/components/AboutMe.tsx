@@ -26,7 +26,7 @@ const TEAM_MEMBERS_DETAILED: TeamMember[] = [
     role: 'TECHNICAL ARCHITECT',
     tag: 'CORE ENGINE PROGRAMMER',
     image: TEAM_IMAGES.imgBhagat,
-    description: 'Directing Not Decided’s high-performance engineering stack. Bhagat specializes in core technical architecture, custom API proxy gateways, ultra-fast routing, stable database models, and headless server integrations. His code ensures that high-fidelity menu assets yield load speeds under 0.2 seconds.',
+    description: 'Directing Nexus BlueOrbit Web’s high-performance engineering stack. Bhagat specializes in core technical architecture, custom API proxy gateways, ultra-fast routing, stable database models, and headless server integrations. His code ensures that high-fidelity menu assets yield load speeds under 0.2 seconds.',
     skills: ['React & Node.js Core API Coding', 'Vite & esbuild Configurations', 'Server-Side Speed Tuning', 'Cloud-Native Container Routing'],
     funFact: 'Hand-builds custom reactive compilers and analyzes luxury restaurant page layouts.',
     location: 'Kuala Lumpur, MY',
@@ -76,10 +76,10 @@ export default function AboutMe() {
         <ScrollReveal className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-24 text-left">
           <div className="lg:col-span-7">
             <span className="text-[10px] font-mono tracking-[0.25em] text-sky-450 uppercase font-bold bg-sky-500/10 px-4 py-1.5 rounded-full w-max shadow-sm">
-              THE ARTISANS BEHIND NOT DECIDED
+              THE ARTISANS BEHIND Nexus BlueOrbit Web
             </span>
             <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white font-serif mt-5">
-              The Not Decided <span className="italic font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-cyan-400 uppercase font-mono pr-2">Core Team</span>
+              The Nexus BlueOrbit Web <span className="italic font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-cyan-400 uppercase font-mono pr-2">Core Team</span>
             </h2>
           </div>
           <div className="lg:col-span-5 lg:pl-8 border-l border-white/[0.06] mt-4 lg:mt-0">

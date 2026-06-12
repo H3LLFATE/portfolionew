@@ -205,7 +205,7 @@ export default function Services({ onSelectPackage }: ServicesProps) {
         {/* Dynamic Footnote */}
         <ScrollReveal delay={0.15} className="mt-16 text-center max-w-2xl mx-auto">
           <p className="text-[10px] text-neutral-450 leading-relaxed font-mono">
-            * Have specific integration requirements beyond these options? Contact Not Decided via <a href={CONTACT_LINKS.whatsappDirect} target="_blank" rel="noopener noreferrer" className="text-sky-400 select-all hover:underline">WhatsApp ({CONTACT_LINKS.phone})</a>.
+            * Have specific integration requirements beyond these options? Contact Nexus BlueOrbit Web via <a href={CONTACT_LINKS.whatsappDirect} target="_blank" rel="noopener noreferrer" className="text-sky-400 select-all hover:underline">WhatsApp ({CONTACT_LINKS.phone})</a>.
           </p>
         </ScrollReveal>
 

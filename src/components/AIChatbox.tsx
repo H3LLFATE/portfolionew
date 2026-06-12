@@ -24,7 +24,7 @@ export default function AIChatbox() {
     {
       id: 'welcome-1',
       sender: 'ai',
-      text: "Hello! Welcome to Not Decided. 🍾 I'm your AI pricing and design assistant.",
+      text: "Hello! Welcome to Nexus BlueOrbit Web. 🍾 I'm your AI pricing and design assistant.",
       timestamp: new Date(),
     },
     {
@@ -38,7 +38,7 @@ export default function AIChatbox() {
         { label: "📸 Why custom site over Instagram?", action: "instagram" },
         { label: "📱 Mobile Speed optimization?", action: "mobile" },
         { label: "✨ Launch Project Blueprint", action: "start" },
-        { label: "📲 WhatsApp Not Decided directly", action: "no_answer" },
+        { label: "📲 WhatsApp Nexus BlueOrbit Web directly", action: "no_answer" },
       ],
     },
   ]);
@@ -82,7 +82,7 @@ export default function AIChatbox() {
         userText = '🔙 Return to main options';
         break;
       case 'no_answer':
-        userText = '📲 Talk to Not Decided';
+        userText = '📲 Talk to Nexus BlueOrbit Web';
         break;
       default:
         userText = action;
@@ -136,7 +136,7 @@ export default function AIChatbox() {
       else timeGreeting = "Good evening! 🥂";
 
       addMessage(
-        `${timeGreeting} Warmest welcome to Not Decided. It is an absolute pleasure to meet you! \n\n` +
+        `${timeGreeting} Warmest welcome to Nexus BlueOrbit Web. It is an absolute pleasure to meet you! \n\n` +
         "I'm your dedicated AI Gastronomy Strategist, engineered specifically to help visionary restaurant owners, cafes, and gourmet spaces design ultra-premium, ultra-fast web outposts.\n\n" +
         "How can I help boost your establishment's performance brand today? Let's check out our pricing tiers, mapping structures, or the exact 10-day launch blueprint!",
         'ai',
@@ -145,7 +145,7 @@ export default function AIChatbox() {
           { label: "⏱️ Our 10-Day Timeline", action: "timeline" },
           { label: "📸 Website vs Instagram?", action: "instagram" },
           { label: "✨ Launch Project Blueprint", action: "start" },
-          { label: "📲 WhatsApp Not Decided directly", action: "no_answer" }
+          { label: "📲 WhatsApp Nexus BlueOrbit Web directly", action: "no_answer" }
         ]
       );
       return;
@@ -173,13 +173,13 @@ export default function AIChatbox() {
     const matchesIdentity = identityKeywords.some(phrase => cleanedText.includes(phrase));
     if (matchesIdentity) {
       addMessage(
-        "I am the **Not Decided AI Specialist**! 🍾 My system is designed specifically around high-performance restaurant engineering, catering menus, and local search engine mapping.\n\n" +
-        "I was engineered in collaboration with **Not Decided**, our Lead Developer here at Not Decided. I'm here to run structural comparisons, explain page optimizations, and help you pick the perfect digital tier for your venue.\n\n" +
-        "If your requirements go beyond our standard blueprints, I can put you directly in touch with Not Decided on WhatsApp anytime!",
+        "I am the **Nexus BlueOrbit Web AI Specialist**! 🍾 My system is designed specifically around high-performance restaurant engineering, catering menus, and local search engine mapping.\n\n" +
+        "I was engineered in collaboration with **Nexus BlueOrbit Web**, our Lead Developer here at Nexus BlueOrbit Web. I'm here to run structural comparisons, explain page optimizations, and help you pick the perfect digital tier for your venue.\n\n" +
+        "If your requirements go beyond our standard blueprints, I can put you directly in touch with Nexus BlueOrbit Web on WhatsApp anytime!",
         'ai',
         [
           { label: "💰 Pricing Packages", action: "pricing" },
-          { label: "📲 Talk to Not Decided", action: "no_answer" },
+          { label: "📲 Talk to Nexus BlueOrbit Web", action: "no_answer" },
           { label: "🔙 Return to Menu", action: "back_menu" }
         ]
       );
@@ -227,7 +227,7 @@ export default function AIChatbox() {
     // 1. Pricing Response
     if (action === 'pricing' || cleanedText.includes('price') || cleanedText.includes('pricing') || cleanedText.includes('package') || cleanedText.includes('cost') || cleanedText.includes('how much') || cleanedText.includes('rm')) {
       addMessage(
-        "Not Decided offers three high-performance investment tiers custom-engineered to capture diners instantly:\n\n" +
+        "Nexus BlueOrbit Web offers three high-performance investment tiers custom-engineered to capture diners instantly:\n\n" +
         "• **Basic Package (RM800 – RM1,200)**: Single-page layout optimized to mobile touchpoints. Includes printable-quality menus, Google Maps layer, and direct WhatsApp shopping card links.\n\n" +
         "• **Commercial Package [Most Popular] (RM1,800 – RM2,800)**: Multi-page custom React framework with category-filtered active menus, advanced local Google Maps/Places SEO schema, and a custom online table inquiry portal.\n\n" +
         "• **Luxury Package (RM3,500 – RM5,000)**: An immersive culinary theater with rich scroll animations, high-fidelity gallery configurations, dietary allergens lookup tags, and complete automated booking schedules.\n\n" +
@@ -298,7 +298,7 @@ export default function AIChatbox() {
     if (action === 'start' || cleanedText.includes('start') || cleanedText.includes('enquiry') || cleanedText.includes('hire') || cleanedText.includes('contact') || cleanedText.includes('quote') || cleanedText.includes('book')) {
       setLeadCaptureStep('name');
       addMessage(
-        "A superb decision. 🥂 Let's gather your brief project profile. Not Decided (Agency Lead) will analyze these details and reach out to you within 2 hours.\n\n" +
+        "A superb decision. 🥂 Let's gather your brief project profile. Nexus BlueOrbit Web (Agency Lead) will analyze these details and reach out to you within 2 hours.\n\n" +
         "To start, could you share your **Name**?",
         'ai'
       );
@@ -307,15 +307,15 @@ export default function AIChatbox() {
 
     // 5.5 WhatsApp Sync Support
     if (action === 'no_answer' || cleanedText.includes('whatsapp') || cleanedText.includes('bhaghat') || cleanedText.includes('direct') || cleanedText.includes('chat') || cleanedText.includes('person') || cleanedText.includes('call')) {
-      const whatsappMsg = "Hi Not Decided, I'm analyzing a digital build for my dining space on the Not Decided AI Assistant and would love to ask you a specific question regarding my culinary project!";
+      const whatsappMsg = "Hi Nexus BlueOrbit Web, I'm analyzing a digital build for my dining space on the Nexus BlueOrbit Web AI Assistant and would love to ask you a specific question regarding my culinary project!";
       const whatsappUrl = `https://wa.me/60146231699?text=${encodeURIComponent(whatsappMsg)}`;
       
       addMessage(
         "Excellent. Let's sync you directly with our Principal Developer. 📲\n\n" +
-        "Click the link below to load a direct WhatsApp link with Not Decided. They are ready to discuss bespoke parameters immediately.",
+        "Click the link below to load a direct WhatsApp link with Nexus BlueOrbit Web. They are ready to discuss bespoke parameters immediately.",
         'ai',
         [
-          { label: "📲 Text Not Decided on WhatsApp", action: whatsappUrl },
+          { label: "📲 Text Nexus BlueOrbit Web on WhatsApp", action: whatsappUrl },
           { label: "🔙 Main Screen", action: "back_menu" }
         ]
       );
@@ -325,7 +325,7 @@ export default function AIChatbox() {
     // 6. Return menu / options reset
     if (action === 'back_menu' || cleanedText.includes('menu') || cleanedText.includes('back') || cleanedText.includes('restart') || cleanedText.includes('options') || cleanedText.includes('help') || cleanedText === 'main') {
       addMessage(
-        "How can Not Decided boost your culinary establishment's performance brand today?",
+        "How can Nexus BlueOrbit Web boost your culinary establishment's performance brand today?",
         'ai',
         [
           { label: "💰 Compare Pricing Tiers", action: "pricing" },
@@ -333,7 +333,7 @@ export default function AIChatbox() {
           { label: "📸 Why custom site over Instagram?", action: "instagram" },
           { label: "📱 Mobile Speed optimization?", action: "mobile" },
           { label: "✨ Launch Project Blueprint", action: "start" },
-          { label: "📲 WhatsApp Not Decided directly", action: "no_answer" },
+          { label: "📲 WhatsApp Nexus BlueOrbit Web directly", action: "no_answer" },
         ]
       );
       return;
@@ -366,7 +366,7 @@ export default function AIChatbox() {
       setLeadCaptureStep('contact');
       addMessage(
         `Excellent! **${text}** sounds exceptional.\n\n` +
-        "Finally, what is your preferred **Email address or Phone number** so Not Decided can send over your custom visual mood board?",
+        "Finally, what is your preferred **Email address or Phone number** so Nexus BlueOrbit Web can send over your custom visual mood board?",
         'ai'
       );
     } else if (leadCaptureStep === 'contact') {
@@ -379,14 +379,14 @@ export default function AIChatbox() {
         `• **Contact Person**: ${finalData.name}\n` +
         `• **Establishment Name**: ${finalData.restaurantName}\n` +
         `• **Contact Information**: ${finalData.contact}\n\n` +
-        "Not Decided will review these parameters and message you within 2 hours. Let's build a masterpiece!",
+        "Nexus BlueOrbit Web will review these parameters and message you within 2 hours. Let's build a masterpiece!",
         'ai',
         [
           { label: "🔙 Return to Main", action: "back_menu" }
         ]
       );
       
-      console.log('Not Decided Client Captured AI Lead:', finalData);
+      console.log('Nexus BlueOrbit Web Client Captured AI Lead:', finalData);
     }
   };
 
@@ -443,7 +443,7 @@ export default function AIChatbox() {
 
           {/* Tooltip Overlay */}
           <div className="absolute right-16 top-1/2 -translate-y-1/2 bg-[#060210] border border-sky-500/20 text-sky-400 text-[10px] uppercase font-mono tracking-widest px-3.5 py-1.5 rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none hidden sm:block shadow-lg">
-            Ask Not Decided AI
+            Ask Nexus BlueOrbit Web AI
           </div>
         </motion.button>
       </div>
@@ -468,7 +468,7 @@ export default function AIChatbox() {
                 </div>
                 <div>
                   <div className="flex items-center space-x-1.5">
-                    <h4 className="text-white font-serif font-semibold text-sm">Not Decided AI Specialist</h4>
+                    <h4 className="text-white font-serif font-semibold text-sm">Nexus BlueOrbit Web AI Specialist</h4>
                     <Sparkles size={11} className="text-sky-400" />
                   </div>
                   <span className="text-[10px] font-mono tracking-widest text-[#cebfff] uppercase block leading-none mt-1">
@@ -546,7 +546,7 @@ export default function AIChatbox() {
                     <span className="w-1.5 h-1.5 bg-sky-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                   </div>
                   <span className="text-[9px] font-mono text-neutral-450 uppercase mt-1">
-                    Consulting Not Decided specs...
+                    Consulting Nexus BlueOrbit Web specs...
                   </span>
                 </div>
               )}

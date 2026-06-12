@@ -103,7 +103,7 @@ export default function App() {
                   </span>
                   <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mt-4 tracking-tight leading-[1.12]">
                     The Minds Behind <br />
-                    <span className="inline-block italic font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-305 to-cyan-400 uppercase font-mono pr-4">The Not Decided Standard</span>
+                    <span className="inline-block italic font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-305 to-cyan-400 uppercase font-mono pr-4">The Nexus BlueOrbit Web Standard</span>
                   </h1>
                   <p className="text-neutral-350 text-sm md:text-base font-light max-w-2xl mx-auto mt-6 leading-relaxed font-sans">
                     Meet the specialized architectural experts delivering hands-on engineering execution and precise culinary domain experience.
@@ -131,7 +131,7 @@ export default function App() {
                     Have a Vision you Want Executed?
                   </h3>
                   <p className="text-neutral-400 text-xs md:text-sm font-light max-w-lg mx-auto mb-8 font-sans">
-                    Let Not Decided and the core engineering team bring your restaurant's elite digital layout to life.
+                    Let Nexus BlueOrbit Web and the core engineering team bring your restaurant's elite digital layout to life.
                   </p>
                   <button
                     onClick={() => handleNavigate('home', 'contact')}

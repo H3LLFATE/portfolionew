@@ -56,7 +56,7 @@ export default function Navbar({ currentPage = 'home', onNavigate }: NavbarProps
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 md:px-8 flex items-center justify-between">
-          {/* Logo brand - Not Decided */}
+          {/* Logo brand - Nexus BlueOrbit Web */}
           <button
             onClick={handleLogoClick}
             className="flex items-center space-x-3 text-left cursor-pointer group"
@@ -66,10 +66,10 @@ export default function Navbar({ currentPage = 'home', onNavigate }: NavbarProps
             </div>
             <div className="flex flex-col">
               <span className="text-xl font-bold tracking-widest uppercase text-white font-mono leading-none">
-                Not Decided
+                Nexus BlueOrbit Web
               </span>
               <span className="text-[9px] font-mono tracking-wider text-sky-400 uppercase leading-none mt-1">
-                Not Decided
+                Nexus BlueOrbit Web
               </span>
             </div>
           </button>
@@ -176,7 +176,7 @@ export default function Navbar({ currentPage = 'home', onNavigate }: NavbarProps
               </button>
               
               <div className="text-center text-neutral-500 text-[8px] font-mono uppercase tracking-wider">
-                Not Decided © 2026
+                Nexus BlueOrbit Web © 2026
               </div>
             </div>
           </motion.div>
