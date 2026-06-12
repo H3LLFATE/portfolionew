@@ -55,50 +55,53 @@ export default function Navbar({ currentPage = 'home', onNavigate }: NavbarProps
             : 'bg-transparent border-transparent'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-6 md:px-8 flex items-center justify-between">
+        <div className="max-w-[1440px] mx-auto px-6 md:px-12 flex items-center justify-between relative">
           {/* Logo brand - Nexus BlueOrbit Web */}
           <button
             onClick={handleLogoClick}
             className="flex items-center space-x-3 text-left cursor-pointer group"
           >
-            <div className="w-10 h-10 bg-gradient-to-tr from-blue-600 via-sky-500 to-cyan-400 rounded-xl flex items-center justify-center font-serif font-black text-white border border-white/20 text-base shadow-[0_0_20px_rgba(30,64,175,0.35)] transition-all duration-300 group-hover:scale-105">
-              N
-            </div>
+            <img 
+              src="/favicon.png" 
+              alt="Nexus BlueOrbit Web Logo" 
+              className="w-10 h-10 object-contain rounded-xl border border-white/20 shadow-[0_0_20px_rgba(30,64,175,0.35)] transition-all duration-300 group-hover:scale-105"
+            />
             <div className="flex flex-col">
-              <span className="text-xl font-bold tracking-widest uppercase text-white font-mono leading-none">
+              <span className="text-sm xl:text-xl font-bold tracking-widest uppercase text-white font-mono leading-none">
                 Nexus BlueOrbit Web
               </span>
-              <span className="text-[9px] font-mono tracking-wider text-sky-400 uppercase leading-none mt-1">
+              <span className="hidden xl:block text-[9px] font-mono tracking-wider text-sky-400 uppercase leading-none mt-1">
                 Nexus BlueOrbit Web
               </span>
             </div>
           </button>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-8">
-            <div className="flex items-center space-x-1 bg-black/40 backdrop-blur-xl border border-white/10 rounded-full px-5 py-1.5 shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
-              {menuItems.map((item) => {
-                const isActive = (item.page === 'team' && currentPage === 'team') || 
-                                 (item.page === 'home' && currentPage === 'home' && false); // can wire scroll spy later or keep it active based on page context
-                return (
-                  <button
-                    key={item.label}
-                    onClick={() => handleItemClick(item)}
-                    className={`px-3.5 py-1.5 rounded-full text-xs font-light tracking-widest uppercase cursor-pointer transition-all duration-300 ${
-                      isActive 
-                        ? 'text-sky-300 bg-sky-500/10 border border-sky-450/20' 
-                        : 'text-white/70 hover:text-sky-300 hover:bg-white/5 border border-transparent'
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                );
-              })}
-            </div>
+          {/* Centered Desktop Navigation */}
+          <div className="hidden lg:flex absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 items-center space-x-1 bg-black/40 backdrop-blur-xl border border-white/10 rounded-full px-4 py-1.5 shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
+            {menuItems.map((item) => {
+              const isActive = (item.page === 'team' && currentPage === 'team') || 
+                               (item.page === 'home' && currentPage === 'home' && false);
+              return (
+                <button
+                  key={item.label}
+                  onClick={() => handleItemClick(item)}
+                  className={`px-2.5 xl:px-3.5 py-1.5 rounded-full text-[11px] xl:text-xs font-light tracking-widest uppercase cursor-pointer transition-all duration-300 ${
+                    isActive 
+                      ? 'text-sky-300 bg-sky-500/10 border border-sky-450/20' 
+                      : 'text-white/70 hover:text-sky-300 hover:bg-white/5 border border-transparent'
+                  }`}
+                >
+                  {item.label}
+                </button>
+              );
+            })}
+          </div>
 
+          {/* Right Action Button */}
+          <div className="hidden lg:flex items-center">
             <button
                onClick={handleContactClick}
-               className="group flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white font-extrabold px-6 py-2.5 rounded-full text-xs tracking-wider uppercase transition-all duration-300 shadow-[0_12px_32px_-10px_rgba(30,64,175,0.3)] hover:scale-[1.03] border border-white/20 cursor-pointer"
+               className="group flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white font-extrabold px-4 xl:px-6 py-2.5 rounded-full text-[11px] xl:text-xs tracking-wider uppercase transition-all duration-300 shadow-[0_12px_32px_-10px_rgba(30,64,175,0.3)] hover:scale-[1.03] border border-white/20 cursor-pointer"
             >
               <span>Build My Site</span>
               <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />

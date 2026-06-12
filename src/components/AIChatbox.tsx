@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MessageSquare, X, Send, Bot, Sparkles, MessageCircle, Star } from 'lucide-react';
+import { CONTACT_LINKS } from '@/links.js';
 
 interface Message {
   id: string;
@@ -10,13 +11,7 @@ interface Message {
   quickReplies?: Array<{ label: string; action: string }>;
 }
 
-interface LeadData {
-  name: string;
-  restaurantName: string;
-  contact: string;
-}
 
-type LeadCaptureStep = 'none' | 'name' | 'restaurant' | 'contact' | 'completed';
 
 export default function AIChatbox() {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,33 +19,27 @@ export default function AIChatbox() {
     {
       id: 'welcome-1',
       sender: 'ai',
-      text: "Hello! Welcome to Nexus BlueOrbit Web. 🍾 I'm your AI pricing and design assistant.",
+      text: "Hello! Welcome to Nexus BlueOrbit Web. 👋 I'm your AI assistant.",
       timestamp: new Date(),
     },
     {
       id: 'welcome-2',
       sender: 'ai',
-      text: "I help visionary restaurant brands & culinary spaces analyze custom designs, evaluate speed parameters, and pick the perfect high-performance web package. How may I help you today?",
+      text: "I help local businesses and restaurants analyze design options, evaluate loading speeds, and pick the perfect website package. How may I help you today?",
       timestamp: new Date(),
       quickReplies: [
         { label: "💰 Compare Pricing Tiers", action: "pricing" },
-        { label: "⏱️ What is the 10-day timeline?", action: "timeline" },
+        { label: "⏱️ Our 10-day timeline?", action: "timeline" },
         { label: "📸 Why custom site over Instagram?", action: "instagram" },
         { label: "📱 Mobile Speed optimization?", action: "mobile" },
-        { label: "✨ Launch Project Blueprint", action: "start" },
-        { label: "📲 WhatsApp Nexus BlueOrbit Web directly", action: "no_answer" },
+        { label: "📁 View Portfolio work", action: "portfolio" },
+        { label: "📲 Chat / Contact Us", action: "contact_options" },
       ],
     },
   ]);
 
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [leadCaptureStep, setLeadCaptureStep] = useState<LeadCaptureStep>('none');
-  const [leadData, setLeadData] = useState<LeadData>({
-    name: '',
-    restaurantName: '',
-    contact: '',
-  });
 
   const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -81,8 +70,9 @@ export default function AIChatbox() {
       case 'back_menu':
         userText = '🔙 Return to main options';
         break;
+      case 'contact_options':
       case 'no_answer':
-        userText = '📲 Talk to Nexus BlueOrbit Web';
+        userText = '📲 Chat / Contact Us';
         break;
       default:
         userText = action;
@@ -110,15 +100,49 @@ export default function AIChatbox() {
   const generateResponse = (action: string, text: string) => {
     setIsTyping(false);
 
-    if (leadCaptureStep !== 'none' && leadCaptureStep !== 'completed') {
-      handleLeadCaptureProgress(text);
+    // Strip punctuation to make matching extremely robust
+    const cleanedText = text.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "").trim();
+
+    // 1. CONTACT RULE: If user asks for direct contact or developer channels,
+    // immediately show contact options without asking for Name/Email first.
+    const isContactTrigger = 
+      action === 'contact_options' || 
+      action === 'no_answer' || 
+      cleanedText.includes('contact') || 
+      cleanedText.includes('whatsapp') || 
+      cleanedText.includes('instagram') || 
+      cleanedText.includes('ig') || 
+      cleanedText.includes('hire') || 
+      cleanedText.includes('quote') || 
+      cleanedText.includes('enquiry') || 
+      cleanedText.includes('speak to someone') || 
+      cleanedText.includes('call') || 
+      cleanedText.includes('developer') || 
+      cleanedText.includes('chat with us') || 
+      cleanedText.includes('person') || 
+      cleanedText.includes('sync') ||
+      cleanedText.includes('email');
+
+    if (isContactTrigger) {
+      addMessage(
+        "You can reach our team directly through:\n\n" +
+        "📲 WhatsApp\n" +
+        "📸 Instagram\n" +
+        "📧 Email\n\n" +
+        "We usually reply within 2 hours.\n\n" +
+        "If you'd like a recommendation before contacting us, tell me what type of business you run.",
+        'ai',
+        [
+          { label: "📲 Chat on WhatsApp", action: CONTACT_LINKS.whatsappDirect },
+          { label: "📸 Chat on Instagram", action: CONTACT_LINKS.instagram },
+          { label: "📧 Email Us", action: `mailto:${CONTACT_LINKS.email}` },
+          { label: "🔙 Return to Menu", action: "back_menu" }
+        ]
+      );
       return;
     }
 
-    // Strip punctuation to make matching extremely robust and pleasant
-    const cleanedText = text.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "").trim();
-
-    // 0.1 High-fidelity Detailed Greetings ("hi", "hello", "hey", "yo")
+    // 2. Greetings triggers
     const greetings = ['hi', 'hello', 'hey', 'yo', 'greetings', 'howdy', 'good morning', 'good afternoon', 'good evening', 'hola', 'sup', 'morning', 'afternoon'];
     const matchesGreeting = greetings.some(word => 
       cleanedText === word || 
@@ -126,38 +150,30 @@ export default function AIChatbox() {
       cleanedText.endsWith(' ' + word) || 
       cleanedText.includes(' ' + word + ' ')
     );
-
-    if (matchesGreeting && action !== 'pricing' && action !== 'timeline' && action !== 'instagram' && action !== 'mobile' && action !== 'start') {
-      // Pick a warm greeting based on time of day or nice randomized responses
-      const hour = new Date().getHours();
-      let timeGreeting = "Hi there! 👋";
-      if (hour < 12) timeGreeting = "Good morning! ☕";
-      else if (hour < 17) timeGreeting = "Good afternoon!☀️";
-      else timeGreeting = "Good evening! 🥂";
-
+    if (matchesGreeting) {
       addMessage(
-        `${timeGreeting} Warmest welcome to Nexus BlueOrbit Web. It is an absolute pleasure to meet you! \n\n` +
-        "I'm your dedicated AI Gastronomy Strategist, engineered specifically to help visionary restaurant owners, cafes, and gourmet spaces design ultra-premium, ultra-fast web outposts.\n\n" +
-        "How can I help boost your establishment's performance brand today? Let's check out our pricing tiers, mapping structures, or the exact 10-day launch blueprint!",
+        "Hello! Welcome to Nexus BlueOrbit Web. 👋 I'm your AI assistant.\n\n" +
+        "I help local businesses and restaurants analyze design options, evaluate loading speeds, and pick the perfect website package. How may I help you today?",
         'ai',
         [
           { label: "💰 Compare Pricing Tiers", action: "pricing" },
-          { label: "⏱️ Our 10-Day Timeline", action: "timeline" },
-          { label: "📸 Website vs Instagram?", action: "instagram" },
-          { label: "✨ Launch Project Blueprint", action: "start" },
-          { label: "📲 WhatsApp Nexus BlueOrbit Web directly", action: "no_answer" }
+          { label: "⏱️ Our 10-day timeline?", action: "timeline" },
+          { label: "📸 Why custom site over Instagram?", action: "instagram" },
+          { label: "📱 Mobile Speed optimization?", action: "mobile" },
+          { label: "📁 View Portfolio work", action: "portfolio" },
+          { label: "📲 Chat / Contact Us", action: "contact_options" },
         ]
       );
       return;
     }
 
-    // 0.2 "How are you" / "How's it going" Check
+    // 3. Mood Triggers
     const physicalMoodKeywords = ['how are you', 'how are u', 'how is it going', 'hows it going', 'how you doing', 'how u doing', 'doing today', 'whats up', 'sup'];
     const matchesMood = physicalMoodKeywords.some(phrase => cleanedText.includes(phrase));
     if (matchesMood) {
       addMessage(
-        "I am doing outstandingly well! 🚀 Just calibrated a localized page speed mockup and got a rendering paint score of 0.4 seconds. I'm always energized when discussing responsive culinary aesthetics.\n\n" +
-        "How are things cooking on your end? Are you looking to launch a brand new venue, or is your existing website loading slower than comfortable?",
+        "I am doing outstandingly well! 🚀 Just calibrated a localized page speed mockup and got a rendering paint score of 0.4 seconds. I'm always energized when discussing responsive website performance.\n\n" +
+        "How are things going on your end? Are you looking to launch a brand new site, or is your existing website loading slower than you'd like?",
         'ai',
         [
           { label: "💰 View Package Options", action: "pricing" },
@@ -168,25 +184,25 @@ export default function AIChatbox() {
       return;
     }
 
-    // 0.3 "Who are you" / "What do you do" / "Who created you" Check
+    // 4. Identity Triggers
     const identityKeywords = ['who are you', 'what are you', 'your name', 'who built you', 'who made you', 'who created you', 'what do you do'];
     const matchesIdentity = identityKeywords.some(phrase => cleanedText.includes(phrase));
     if (matchesIdentity) {
       addMessage(
-        "I am the **Nexus BlueOrbit Web AI Specialist**! 🍾 My system is designed specifically around high-performance restaurant engineering, catering menus, and local search engine mapping.\n\n" +
-        "I was engineered in collaboration with **Nexus BlueOrbit Web**, our Lead Developer here at Nexus BlueOrbit Web. I'm here to run structural comparisons, explain page optimizations, and help you pick the perfect digital tier for your venue.\n\n" +
-        "If your requirements go beyond our standard blueprints, I can put you directly in touch with Nexus BlueOrbit Web on WhatsApp anytime!",
+        "I am the **Nexus BlueOrbit Web AI Specialist**! 🍾 My system is designed specifically to help local businesses and restaurants find the right web design, local search mapping, and pricing solutions.\n\n" +
+        "I was engineered in collaboration with **Nexus BlueOrbit Web**, our Lead Developer. I'm here to run structural comparisons, explain page speed optimizations, and help you pick the perfect digital tier for your business.\n\n" +
+        "If you want to connect directly, you can reach out on WhatsApp or Instagram at any time!",
         'ai',
         [
           { label: "💰 Pricing Packages", action: "pricing" },
-          { label: "📲 Talk to Nexus BlueOrbit Web", action: "no_answer" },
+          { label: "📲 Chat / Contact Us", action: "contact_options" },
           { label: "🔙 Return to Menu", action: "back_menu" }
         ]
       );
       return;
     }
 
-    // 0.4 Gratitude / Approvals check ("thanks", "thank you", "awesome", "cool", "nice")
+    // 5. Gratitude / Approvals check
     const gratitudeKeywords = ['thank you', 'thanks', 'ty', 'appreciate', 'awesome', 'cool', 'great', 'nice', 'wonderful', 'perfect', 'cheers'];
     const matchesGratitude = gratitudeKeywords.some(phrase => 
       cleanedText === phrase || 
@@ -195,25 +211,25 @@ export default function AIChatbox() {
     );
     if (matchesGratitude) {
       addMessage(
-        "You are absolutely welcome! 🥂 It's my absolute culinary privilege to assist you. Creating flawless visual menu grids is what gets us out of bed in the morning.\n\n" +
-        "Whenever you're ready, we can run through our high-performance packages or map out a custom launch strategy for your brand.",
+        "You are absolutely welcome! 🥂 It's my privilege to assist you. Building clean, high-performance web layouts that help businesses attract customers is what we love to do.\n\n" +
+        "Whenever you're ready, we can run through our web packages or discuss a custom launch strategy for your brand.",
         'ai',
         [
           { label: "💰 View Pricing Tiers", action: "pricing" },
-          { label: "✨ Start Project Blueprint", action: "start" },
+          { label: "📲 Chat / Contact Us", action: "contact_options" },
           { label: "🔙 Return to Options", action: "back_menu" }
         ]
       );
       return;
     }
 
-    // 0.5 Location Queries ("where are you based", "kuala lumpur", "malaysia")
+    // 6. Location Queries
     const locationKeywords = ['location', 'where are you', 'where are u', 'based', 'kuala lumpur', 'malaysia', 'where located', 'address'];
     const matchesLocation = locationKeywords.some(phrase => cleanedText.includes(phrase));
     if (matchesLocation) {
       addMessage(
         "Our core agency is based in beautiful **Kuala Lumpur, Malaysia**! 🇲🇾 \n\n" +
-        "However, we design and host premium restaurant frontends for gastronomy clients globally. Because everything is built on lightning-fast serverless CDNs, your digital menus will load instantly in under 1.5 seconds, whether your diners are in Bukit Bintang, Singapore, New York, or anywhere else on Earth.",
+        "However, we design and host premium frontends for local businesses and hospitality brands globally. Because everything is built on serverless CDNs, your website will load instantly in under 1.5 seconds, whether your customers are in Kuala Lumpur, Singapore, New York, or anywhere else on Earth.",
         'ai',
         [
           { label: "📱 Check speed params", action: "mobile" },
@@ -224,170 +240,400 @@ export default function AIChatbox() {
       return;
     }
 
-    // 1. Pricing Response
-    if (action === 'pricing' || cleanedText.includes('price') || cleanedText.includes('pricing') || cleanedText.includes('package') || cleanedText.includes('cost') || cleanedText.includes('how much') || cleanedText.includes('rm')) {
+    // 7. Pricing & Packages Inquiry
+    const isPricingQuery = 
+      action === 'pricing' || 
+      cleanedText.includes('price') || 
+      cleanedText.includes('pricing') || 
+      cleanedText.includes('package') || 
+      cleanedText.includes('cost') || 
+      cleanedText.includes('how much') || 
+      cleanedText.includes('rm');
+
+    if (isPricingQuery) {
       addMessage(
-        "Nexus BlueOrbit Web offers three high-performance investment tiers custom-engineered to capture diners instantly:\n\n" +
-        "• **Basic Package (RM800 – RM1,200)**: Single-page layout optimized to mobile touchpoints. Includes printable-quality menus, Google Maps layer, and direct WhatsApp shopping card links.\n\n" +
-        "• **Commercial Package [Most Popular] (RM1,800 – RM2,800)**: Multi-page custom React framework with category-filtered active menus, advanced local Google Maps/Places SEO schema, and a custom online table inquiry portal.\n\n" +
-        "• **Luxury Package (RM3,500 – RM5,000)**: An immersive culinary theater with rich scroll animations, high-fidelity gallery configurations, dietary allergens lookup tags, and complete automated booking schedules.\n\n" +
-        "I highly recommend the **Commercial Package** for active pizzerias and high-traffic lounges. Shall we begin a blueprint review?",
+        "Our websites typically range from RM800 to RM5,000+ depending on the features needed.\n\n" +
+        "Here is our current package structure:\n" +
+        "• **Starter (RM800 – RM1,200)**: Ideal for businesses establishing an online presence.\n" +
+        "• **Growth (RM1,800 – RM2,800)**: Best for established businesses wanting stronger visibility and more information pages.\n" +
+        "• **Signature (RM3,500 – RM5,000+)**: Best for businesses needing advanced custom features, reservations, integrations, or premium design.\n\n" +
+        "Based on the information currently available, this appears to be the package structure. If anything has recently changed, our team can provide the latest details.\n\n" +
+        "To recommend the right option, what type of business do you run?",
         'ai',
         [
-          { label: "✨ Launch Project Blueprint", action: "start" },
-          { label: "📱 Discuss Mobile Speed", action: "mobile" },
-          { label: "🔙 Main Options", action: "back_menu" }
+          { label: "📲 Chat / Contact Us", action: "contact_options" },
+          { label: "🔙 Return to Menu", action: "back_menu" }
         ]
       );
       return;
     }
 
-    // 2. Timeline Response
-    if (action === 'timeline' || cleanedText.includes('timeline') || cleanedText.includes('how long') || cleanedText.includes('days') || cleanedText.includes('duration') || cleanedText.includes('time')) {
+    // 8. Timeline Response
+    const isTimelineQuery = 
+      action === 'timeline' || 
+      cleanedText.includes('timeline') || 
+      cleanedText.includes('how long') || 
+      cleanedText.includes('days') || 
+      cleanedText.includes('duration') || 
+      cleanedText.includes('time') ||
+      cleanedText.includes('10 days') ||
+      cleanedText.includes('10day');
+
+    if (isTimelineQuery) {
       addMessage(
-        "Our agency follows an exact, transparent **10-day timeline schedule** to guarantee unmatched speed and pixel precision:\n\n" +
-        "• **Day 1–3 (Visual Blueprinting)**: We align on digital menu logic, structure wireframes, and design fine visual mood boards.\n\n" +
-        "• **Day 4–7 (Interactive React Engineering)**: Code generation inside responsive frameworks, active culinary filters, and custom messaging pipelines.\n\n" +
-        "• **Day 8–10 (Speed Calibration & Live Launch)**: Compression of assets, indexing Google local search schema directories, verifying 99% Lighthouse PageSpeed score, and linking the live domain.\n\n" +
-        "Check out our previous live demo showcase here: **https://demo-mu-two-82.vercel.app/**",
+        "Many projects take longer because of agency workloads, approval delays, or changing requirements.\n\n" +
+        "The 10-day timeline refers to the development process once requirements and content have been confirmed.\n\n" +
+        "Fast delivery does not mean rushed work. It means efficient planning, communication, and execution.",
         'ai',
         [
-          { label: "✨ Launch Project Blueprint", action: "start" },
-          { label: "💰 Check Investment Packages", action: "pricing" },
-          { label: "🔙 Return to Options", action: "back_menu" }
+          { label: "💰 Check Packages", action: "pricing" },
+          { label: "📁 View Portfolio work", action: "portfolio" },
+          { label: "📲 Chat / Contact Us", action: "contact_options" }
         ]
       );
       return;
     }
 
-    // 3. Instagram Objection Handler
-    if (action === 'instagram' || cleanedText.includes('instagram') || cleanedText.includes('ig') || cleanedText.includes('social') || cleanedText.includes('facebook') || cleanedText.includes('why web')) {
-      addMessage(
-        "Instagram is excellent for organic community updates, but rely on it exclusively and you are draining active dining sales:\n\n" +
-        "• **Zero Loading Friction**: Diners won't swipe through tiny, outdated Instagram highlights. A bespoke website displays physical food lists on an interactive mobile board with zero squinting.\n\n" +
-        "• **Google Maps Domination**: When local diners search 'Best Sourdough Cafe Kuala Lumpur' on Google Search, Instagram handles won't rank. Our optimized local SEO schema delivers you directly onto their maps.\n\n" +
-        "• **No Commission Deductions**: Skip external restaurant aggregation commissions. Direct reservation inquires secure your core profit margins.\n\n" +
-        "Ready to establish a dedicated, high-speed outpost?",
-        'ai',
-        [
-          { label: "✨ Build Custom Outlet", action: "start" },
-          { label: "💰 View Package Costs", action: "pricing" },
-          { label: "🔙 Main Options", action: "back_menu" }
-        ]
-      );
-      return;
-    }
+    // 9. Instagram Objection Handler
+    const isInstagramQuery = 
+      action === 'instagram' || 
+      cleanedText.includes('instagram') || 
+      cleanedText.includes('ig') || 
+      cleanedText.includes('social') || 
+      cleanedText.includes('facebook') || 
+      cleanedText.includes('why web');
 
-    // 4. Mobile Speed optimization Response
-    if (action === 'mobile' || cleanedText.includes('mobile') || cleanedText.includes('speed') || cleanedText.includes('load') || cleanedText.includes('phone') || cleanedText.includes('slow') || cleanedText.includes('lighthouse')) {
+    if (isInstagramQuery) {
       addMessage(
-        "A slow website ruins hungry appetites. Our key standard is keeping mobile sites responsive and instant. 📱\n\n" +
-        "Over 85% of physical restaurant searches happen on smartphones. We use serverless compression and custom code structures to hit a guaranteed **99+ performance score on Lighthouse PageSpeed**.\n\n" +
-        "That means your pages render in less than 1.5 seconds, avoiding bounce rates and clunky PDF downloads.",
-        'ai',
-        [
-          { label: "💰 Check Pricing Packages", action: "pricing" },
-          { label: "📸 Why not Instagram?", action: "instagram" },
-          { label: "✨ Start Blueprint", action: "start" }
-        ]
-      );
-      return;
-    }
-
-    // 5. Start Project Lead Capture
-    if (action === 'start' || cleanedText.includes('start') || cleanedText.includes('enquiry') || cleanedText.includes('hire') || cleanedText.includes('contact') || cleanedText.includes('quote') || cleanedText.includes('book')) {
-      setLeadCaptureStep('name');
-      addMessage(
-        "A superb decision. 🥂 Let's gather your brief project profile. Nexus BlueOrbit Web (Agency Lead) will analyze these details and reach out to you within 2 hours.\n\n" +
-        "To start, could you share your **Name**?",
-        'ai'
-      );
-      return;
-    }
-
-    // 5.5 WhatsApp Sync Support
-    if (action === 'no_answer' || cleanedText.includes('whatsapp') || cleanedText.includes('bhaghat') || cleanedText.includes('direct') || cleanedText.includes('chat') || cleanedText.includes('person') || cleanedText.includes('call')) {
-      const whatsappMsg = "Hi Nexus BlueOrbit Web, I'm analyzing a digital build for my dining space on the Nexus BlueOrbit Web AI Assistant and would love to ask you a specific question regarding my culinary project!";
-      const whatsappUrl = `https://wa.me/60146231699?text=${encodeURIComponent(whatsappMsg)}`;
-      
-      addMessage(
-        "Excellent. Let's sync you directly with our Principal Developer. 📲\n\n" +
-        "Click the link below to load a direct WhatsApp link with Nexus BlueOrbit Web. They are ready to discuss bespoke parameters immediately.",
-        'ai',
-        [
-          { label: "📲 Text Nexus BlueOrbit Web on WhatsApp", action: whatsappUrl },
-          { label: "🔙 Main Screen", action: "back_menu" }
-        ]
-      );
-      return;
-    }
-
-    // 6. Return menu / options reset
-    if (action === 'back_menu' || cleanedText.includes('menu') || cleanedText.includes('back') || cleanedText.includes('restart') || cleanedText.includes('options') || cleanedText.includes('help') || cleanedText === 'main') {
-      addMessage(
-        "How can Nexus BlueOrbit Web boost your culinary establishment's performance brand today?",
+        "Instagram is excellent for engagement and community building.\n\n" +
+        "A website gives customers a dedicated place to find information, menus, services, contact details, locations, and booking options.\n\n" +
+        "The strongest businesses typically use both together. Instagram helps people discover you. A website helps them trust you.",
         'ai',
         [
           { label: "💰 Compare Pricing Tiers", action: "pricing" },
-          { label: "⏱️ What is the 10-day timeline?", action: "timeline" },
-          { label: "📸 Why custom site over Instagram?", action: "instagram" },
-          { label: "📱 Mobile Speed optimization?", action: "mobile" },
-          { label: "✨ Launch Project Blueprint", action: "start" },
-          { label: "📲 WhatsApp Nexus BlueOrbit Web directly", action: "no_answer" },
+          { label: "📲 Chat / Contact Us", action: "contact_options" }
         ]
       );
       return;
     }
 
-    // Default response mapping
-    addMessage(
-      "That sounds highly intriguing! Our team specializes in coding bespoke premium restaurant experiences.\n\n" +
-      "If you would like to map out specialized requirements, we can start a direct project outline or contact the developer directly.",
-      'ai',
-      [
-        { label: "✨ Launch Project Outline", action: "start" },
-        { label: "📲 Chat on WhatsApp", action: "no_answer" },
-        { label: "🔙 Return to Menu", action: "back_menu" }
-      ]
-    );
-  };
+    // 10. Do I really need a website? Objection Handler
+    const isNeedQuery = 
+      cleanedText.includes('need') || 
+      cleanedText.includes('urgent') || 
+      cleanedText.includes('important') || 
+      cleanedText.includes('really need');
 
-  const handleLeadCaptureProgress = (text: string) => {
-    if (leadCaptureStep === 'name') {
-      setLeadData((prev) => ({ ...prev, name: text }));
-      setLeadCaptureStep('restaurant');
+    if (isNeedQuery) {
       addMessage(
-        `Nice to connect, ${text}! 🍽️\n\n` +
-        "Next, what is the **Name of your restaurant, bakery, or culinary culinary establishment**?",
-        'ai'
-      );
-    } else if (leadCaptureStep === 'restaurant') {
-      setLeadData((prev) => ({ ...prev, restaurantName: text }));
-      setLeadCaptureStep('contact');
-      addMessage(
-        `Excellent! **${text}** sounds exceptional.\n\n` +
-        "Finally, what is your preferred **Email address or Phone number** so Nexus BlueOrbit Web can send over your custom visual mood board?",
-        'ai'
-      );
-    } else if (leadCaptureStep === 'contact') {
-      const finalData = { ...leadData, contact: text };
-      setLeadData(finalData);
-      setLeadCaptureStep('completed');
-
-      addMessage(
-        "Splendid! 🥂 Your project profile is safely compiled.\n\n" +
-        `• **Contact Person**: ${finalData.name}\n` +
-        `• **Establishment Name**: ${finalData.restaurantName}\n` +
-        `• **Contact Information**: ${finalData.contact}\n\n` +
-        "Nexus BlueOrbit Web will review these parameters and message you within 2 hours. Let's build a masterpiece!",
+        "A website isn't necessary for every business.\n\n" +
+        "If Instagram already brings consistent customers, answers common questions, displays your services clearly, and generates bookings, then a website may not be urgent.\n\n" +
+        "However, many customers search Google before social media. A website helps businesses appear more professional, easier to find, and easier to contact.\n\n" +
+        "The real question isn't whether you need a website. It's whether potential customers can easily find the information they need when they're ready to buy.",
         'ai',
         [
-          { label: "🔙 Return to Main", action: "back_menu" }
+          { label: "💰 Compare Pricing Tiers", action: "pricing" },
+          { label: "📲 Chat / Contact Us", action: "contact_options" }
         ]
       );
-      
-      console.log('Nexus BlueOrbit Web Client Captured AI Lead:', finalData);
+      return;
     }
+
+    // 11. Price Objection Handler
+    const isPriceObjection = 
+      cleanedText.includes('expensive') || 
+      cleanedText.includes('price too high') || 
+      cleanedText.includes('high price') || 
+      cleanedText.includes('cost too much') || 
+      cleanedText.includes('too expensive');
+
+    if (isPriceObjection) {
+      addMessage(
+        "I understand.\n\n" +
+        "Many businesses initially focus on the cost of a website.\n\n" +
+        "A useful way to look at it is the value of a single new customer. If a website helps bring even a few additional customers each month, it can often pay for itself over time.\n\n" +
+        "That said, not every business needs the largest package. I'd be happy to recommend the most practical option for your situation.",
+        'ai',
+        [
+          { label: "💰 Compare Pricing Tiers", action: "pricing" },
+          { label: "📲 Chat / Contact Us", action: "contact_options" }
+        ]
+      );
+      return;
+    }
+
+    // 12. Small Business Objection Handler
+    const isSmallBusinessObjection = 
+      cleanedText.includes('small') || 
+      cleanedText.includes('small business') || 
+      cleanedText.includes('food stall') || 
+      cleanedText.includes('micro');
+
+    if (isSmallBusinessObjection) {
+      addMessage(
+        "Smaller businesses often benefit the most from a professional online presence.\n\n" +
+        "Customers frequently judge credibility within seconds. A clean website can help even a small local business appear more established and trustworthy.",
+        'ai',
+        [
+          { label: "💰 Compare Pricing Tiers", action: "pricing" },
+          { label: "📲 Chat / Contact Us", action: "contact_options" }
+        ]
+      );
+      return;
+    }
+
+    // 13. AI Website Objection Handler
+    const isAIObjection = 
+      cleanedText.includes('builder') || 
+      cleanedText.includes('generate') || 
+      cleanedText.includes('wix') || 
+      cleanedText.includes('can ai');
+
+    if (isAIObjection) {
+      addMessage(
+        "AI can generate layouts, text, and designs.\n\n" +
+        "The challenge is turning those pieces into a professional website that loads quickly, works properly, represents the business well, and creates trust with customers.\n\n" +
+        "Most businesses don't struggle with generating a website. They struggle with creating one that customers want to use.",
+        'ai',
+        [
+          { label: "💰 Compare Pricing Tiers", action: "pricing" },
+          { label: "📲 Chat / Contact Us", action: "contact_options" }
+        ]
+      );
+      return;
+    }
+
+    // 14. Mobile Speed optimization / Technical Response
+    const isMobileQuery = 
+      action === 'mobile' || 
+      cleanedText.includes('mobile') || 
+      cleanedText.includes('speed') || 
+      cleanedText.includes('load') || 
+      cleanedText.includes('phone') || 
+      cleanedText.includes('slow') || 
+      cleanedText.includes('lighthouse');
+
+    if (isMobileQuery) {
+      addMessage(
+        "We build fast, mobile-friendly websites that load quickly on any device. 📱\n\n" +
+        "Over 85% of local searches happen on smartphones. Keeping load speeds fast reduces bounce rates and ensures customers don't leave your page out of frustration.\n\n" +
+        "Our team targets a 99+ performance score on Lighthouse PageSpeed to keep your site responsive and instant.",
+        'ai',
+        [
+          { label: "💰 Compare Pricing Tiers", action: "pricing" },
+          { label: "📲 Chat / Contact Us", action: "contact_options" }
+        ]
+      );
+      return;
+    }
+
+    // 15. Portfolio Questions
+    const isPortfolioQuery = 
+      action === 'portfolio' || 
+      cleanedText.includes('portfolio') || 
+      cleanedText.includes('examples') || 
+      cleanedText.includes('websites') || 
+      cleanedText.includes('demos') || 
+      cleanedText.includes('previous work');
+
+    if (isPortfolioQuery) {
+      addMessage(
+        "Here are some examples of our previous work:\n\n" +
+        "• **Altitude 42 Sky Bar**: Rooftop fine dining menu portal.\n" +
+        "• **Maharaja's Spice Palace**: Premium Indian dining site.\n" +
+        "• **Sakura Modern Kitchen**: Japanese dining & omakase booking layout.\n" +
+        "• **Sweet Heaven Café**: French pâtisserie catering platform.\n\n" +
+        "You can explore our live portfolio showcase here: **https://demo-mu-two-82.vercel.app/**\n\n" +
+        "What type of business are you running? I can recommend examples most relevant to your industry.",
+        'ai',
+        [
+          { label: "🍕 Restaurant / Café", action: "cafe_query" },
+          { label: "💼 Service / Local Business", action: "service_query" },
+          { label: "📲 Chat / Contact Us", action: "contact_options" }
+        ]
+      );
+      return;
+    }
+
+    // 16. LEAD QUALIFICATION / Recommendation inputs (bakery, cafe, restaurant, bar, lounge, shop, academy, service, local business, pizza, hotel, hospitality, cafe_query, service_query)
+    const isBakeryOrCafe = 
+      action === 'cafe_query' ||
+      cleanedText.includes('bakery') || 
+      cleanedText.includes('café') || 
+      cleanedText.includes('cafe') || 
+      cleanedText.includes('food stall') || 
+      cleanedText.includes('small shop') || 
+      cleanedText.includes('pizza') || 
+      cleanedText.includes('sweets') || 
+      cleanedText.includes('shop');
+
+    const isLargeBusiness = 
+      action === 'service_query' ||
+      cleanedText.includes('restaurant') || 
+      cleanedText.includes('bar') || 
+      cleanedText.includes('lounge') || 
+      cleanedText.includes('academy') || 
+      cleanedText.includes('service') || 
+      cleanedText.includes('local business') || 
+      cleanedText.includes('hotel') || 
+      cleanedText.includes('hospitality');
+
+    if (isBakeryOrCafe) {
+      addMessage(
+        "For a café, bakery, or small business, we typically recommend our **Starter Package (RM800 – RM1,200)**. It's ideal for establishing an online presence with a clean, professional one-page layout, your menu/services, and direct WhatsApp contact.\n\n" +
+        "Do you already have a website, or would this be a new project?",
+        'ai',
+        [
+          { label: "🆕 New Project", action: "new_project" },
+          { label: "🔄 Redesign Existing Site", action: "redesign_project" },
+          { label: "📲 Chat / Contact Us", action: "contact_options" }
+        ]
+      );
+      return;
+    }
+
+    if (isLargeBusiness) {
+      addMessage(
+        "For an established restaurant, bar, or service business, we typically recommend our **Growth Package (RM1,800 – RM2,800)** or **Signature Package (RM3,500 – RM5,000+)** depending on whether you need features like online reservations or custom integrations.\n\n" +
+        "Do you already have a website, or would this be a redesign?",
+        'ai',
+        [
+          { label: "🆕 New Project", action: "new_project" },
+          { label: "🔄 Redesign Existing Site", action: "redesign_project" },
+          { label: "📲 Chat / Contact Us", action: "contact_options" }
+        ]
+      );
+      return;
+    }
+
+    // 17. Project status (new/redesign) triggers
+    if (action === 'new_project' || cleanedText.includes('new website') || cleanedText.includes('new project') || cleanedText === 'new') {
+      addMessage(
+        "Starting fresh is a great opportunity. We can build a fast, mobile-friendly website tailored to your brand from the ground up, making sure potential customers can easily find you.\n\n" +
+        "Do customers currently find you through Google, social media, or referrals?",
+        'ai',
+        [
+          { label: "🔍 Google Search", action: "find_google" },
+          { label: "📸 Social Media", action: "find_social" },
+          { label: "👥 Referrals", action: "find_referrals" }
+        ]
+      );
+      return;
+    }
+
+    if (action === 'redesign_project' || cleanedText.includes('redesign website') || cleanedText.includes('redesign project') || cleanedText === 'redesign') {
+      addMessage(
+        "A redesign is perfect for improving load speeds, modernizing the layout, and boosting your Google search rankings. We can import your existing content and make it look much more professional.\n\n" +
+        "Do customers currently find you through Google, social media, or referrals?",
+        'ai',
+        [
+          { label: "🔍 Google Search", action: "find_google" },
+          { label: "📸 Social Media", action: "find_social" },
+          { label: "👥 Referrals", action: "find_referrals" }
+        ]
+      );
+      return;
+    }
+
+    // 18. Customer discovery channel triggers
+    if (action === 'find_google' || cleanedText === 'google search' || cleanedText === 'google') {
+      addMessage(
+        "Appearing on Google Search and Google Maps is vital for local discovery. We build structured local SEO schemas into all our sites to make sure you rank high when local customers search for your services.\n\n" +
+        "Would you like to check out some of our portfolio examples?",
+        'ai',
+        [
+          { label: "📁 View Portfolio work", action: "portfolio" },
+          { label: "📲 Chat / Contact Us", action: "contact_options" }
+        ]
+      );
+      return;
+    }
+
+    if (action === 'find_social' || cleanedText === 'social media' || cleanedText === 'social') {
+      addMessage(
+        "Social media is great for daily engagement, but a dedicated website builds credibility and helps convert followers into paying customers without distraction.\n\n" +
+        "Would you like to check out some of our portfolio examples?",
+        'ai',
+        [
+          { label: "📁 View Portfolio work", action: "portfolio" },
+          { label: "📲 Chat / Contact Us", action: "contact_options" }
+        ]
+      );
+      return;
+    }
+
+    if (action === 'find_referrals' || cleanedText === 'referrals') {
+      addMessage(
+        "Referral customers are highly valuable. A professional website acts as a validation tool so that when someone is referred to you, they are instantly impressed and can find your contact info easily.\n\n" +
+        "Would you like to check out some of our portfolio examples?",
+        'ai',
+        [
+          { label: "📁 View Portfolio work", action: "portfolio" },
+          { label: "📲 Chat / Contact Us", action: "contact_options" }
+        ]
+      );
+      return;
+    }
+
+    // 19. Menu reset / Fallback Options Reset
+    const isMenuReset = 
+      action === 'back_menu' || 
+      cleanedText.includes('menu') || 
+      cleanedText.includes('back') || 
+      cleanedText.includes('restart') || 
+      cleanedText.includes('options') || 
+      cleanedText.includes('help') || 
+      cleanedText === 'main';
+
+    if (isMenuReset) {
+      addMessage(
+        "I'd be happy to help. I can answer questions about:\n\n" +
+        "• Website pricing\n" +
+        "• Website features\n" +
+        "• Restaurant websites\n" +
+        "• Local business websites\n" +
+        "• SEO\n" +
+        "• Website speed\n" +
+        "• Project timelines\n" +
+        "• Portfolio examples\n" +
+        "• Contact options\n\n" +
+        "What would you like to know?",
+        'ai',
+        [
+          { label: "💰 Compare Pricing Tiers", action: "pricing" },
+          { label: "⏱️ Our 10-day timeline?", action: "timeline" },
+          { label: "📸 Why custom site over Instagram?", action: "instagram" },
+          { label: "📱 Mobile Speed optimization?", action: "mobile" },
+          { label: "📁 View Portfolio work", action: "portfolio" },
+          { label: "📲 Chat / Contact Us", action: "contact_options" }
+        ]
+      );
+      return;
+    }
+
+    // Default Fallback response
+    addMessage(
+      "I'd be happy to help.\n\n" +
+      "I can answer questions about:\n" +
+      "• Website pricing\n" +
+      "• Website features\n" +
+      "• Restaurant websites\n" +
+      "• Local business websites\n" +
+      "• SEO\n" +
+      "• Website speed\n" +
+      "• Project timelines\n" +
+      "• Portfolio examples\n" +
+      "• Contact options\n\n" +
+      "What would you like to know?",
+      'ai',
+      [
+        { label: "💰 Compare Pricing Tiers", action: "pricing" },
+        { label: "⏱️ Our 10-day timeline?", action: "timeline" },
+        { label: "📸 Why custom site over Instagram?", action: "instagram" },
+        { label: "📁 View Portfolio work", action: "portfolio" },
+        { label: "📲 Chat / Contact Us", action: "contact_options" }
+      ]
+    );
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {
@@ -462,8 +708,12 @@ export default function AIChatbox() {
             {/* Custom Electric Neon Sky Blue Header */}
             <div className="bg-gradient-to-r from-blue-950/40 via-sky-900/10 to-cyan-950/30 border-b border-sky-500/15 p-4 shrink-0 flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <div className="relative w-9 h-9 bg-sky-950 border border-sky-500/30 rounded-xl flex items-center justify-center text-sky-400">
-                  <Bot size={18} />
+                <div className="relative w-9 h-9 bg-sky-950 border border-sky-500/30 rounded-xl overflow-hidden flex items-center justify-center">
+                  <img 
+                    src="/favicon.png" 
+                    alt="Nexus BlueOrbit Web Logo" 
+                    className="w-full h-full object-contain"
+                  />
                   <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-sky-450 rounded-full border border-[#0d0925]" />
                 </div>
                 <div>
@@ -508,7 +758,7 @@ export default function AIChatbox() {
                   {msg.quickReplies && (
                     <div className="flex flex-wrap gap-2 mt-3 max-w-[95%] shrink-0">
                       {msg.quickReplies.map((reply, i) => {
-                        const isLink = reply.action.startsWith('http');
+                        const isLink = reply.action.startsWith('http') || reply.action.startsWith('mailto:');
                         if (isLink) {
                           return (
                             <a
@@ -563,12 +813,7 @@ export default function AIChatbox() {
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder={
-                  leadCaptureStep === 'name' ? "Enter your Name..." :
-                  leadCaptureStep === 'restaurant' ? "Enter restaurant name..." :
-                  leadCaptureStep === 'contact' ? "Enter your Email / Phone..." :
-                  "Inquire about specs, pricing, speed..."
-                }
+                placeholder="Inquire about specs, pricing, speed..."
                 className="flex-1 bg-black/60 border border-sky-500/15 focus:border-cyan-400/40 rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-neutral-550 outline-none transition-all duration-300 font-sans"
               />
               <button

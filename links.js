@@ -28,6 +28,6 @@ export const TEAM_IMAGES = {
 export const CONTACT_LINKS = {
   phone: '+60 14-623 1699',
   whatsappDirect: 'https://wa.me/60146231699?text=Hi%20Not%20Decided%2C%0AI%E2%80%99m%20reaching%20out%20regarding%20a%20website%20for%20my%20restaurant.%20I%E2%80%99d%20like%20to%20discuss%20options%20and%20see%20what%20package%20would%20fit.',
-  email: 'hello@notdecided.design',
-  instagram: 'https://instagram.com/notdecided',
+  email: 'nexusblueorbitweb@gmail.com',
+  instagram: 'https://instagram.com/nexusblueorbit',
 };

@@ -366,10 +366,17 @@ export default function ContactForm({ selectedPackage, onClearPackage }: Contact
         <ScrollReveal className="mt-20 pt-8 border-t border-sky-500/10 flex flex-col md:flex-row items-center justify-between text-left gap-6 z-10 relative">
           
           {/* Logo brand */}
-          <div className="flex flex-col space-y-2 items-center md:items-start">
-            <span className="text-xl font-bold tracking-widest uppercase text-white font-mono">
-              Nexus BlueOrbit Web
-            </span>
+          <div className="flex flex-col space-y-3 items-center md:items-start">
+            <div className="flex items-center space-x-3">
+              <img 
+                src="/favicon.png" 
+                alt="Nexus BlueOrbit Web Logo" 
+                className="w-8 h-8 object-contain rounded-lg border border-white/10"
+              />
+              <span className="text-xl font-bold tracking-widest uppercase text-white font-mono">
+                Nexus BlueOrbit Web
+              </span>
+            </div>
             <p className="text-neutral-450 text-[11px] font-sans font-light leading-relaxed max-w-xs text-center md:text-left text-neutral-400">
               Premium Websites for Restaurants, Cafés & Hospitality Brands. Managed by Nexus BlueOrbit Web.
             </p>
